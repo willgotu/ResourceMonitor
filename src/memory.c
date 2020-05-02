@@ -32,3 +32,48 @@ int callMemoryUsage() {
 
     return 0;  
 }
+
+int getLogicalDiskInfo() {
+    
+    wchar_t LogicalDrives[MAX_PATH] = {0};
+    DWORD driveNames = GetLogicalDriveStringsW(MAX_PATH, LogicalDrives);
+    
+    if (driveNames == 0) {
+        wprintf(L"Failed to get drive names %ld", GetLastError());
+        return 1;
+    }
+
+    if (driveNames > 0 && driveNames <= MAX_PATH) {
+    
+        wchar_t *CurrentDrive = LogicalDrives;
+        
+        while(*CurrentDrive) {
+            wprintf(L"%ls\n", CurrentDrive);
+
+            CurrentDrive += wcslen(CurrentDrive) + 1;
+        }
+    }
+    return 0;
+}
+
+int getDiskSpace() {
+
+    unsigned __int64 freeCall,
+                    total,
+                    free;
+    LPCWSTR pszDrive = NULL;
+    pszDrive = L"C:\\";
+    int diskSpace = GetDiskFreeSpaceExW(pszDrive, (PULARGE_INTEGER) &freeCall,
+        (PULARGE_INTEGER) &total, (PULARGE_INTEGER) &free);
+
+    if (diskSpace == 0) {
+
+        wprintf(L"Failed to get free disk space %ld", GetLastError());
+        return 1;
+    }	
+
+    wprintf(L"Total space: %I64u MB\n", total / (1024*1024));
+    wprintf(L"Free space on drive: %I64u MB\n", free / (1024*1024));
+    
+    return 0;
+}
