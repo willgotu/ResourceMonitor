@@ -1,3 +1,4 @@
+#include "../include/memory.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <sys/sysinfo.h>
@@ -5,7 +6,6 @@
 
 /* /////////////////////////////////////////////////////////
  * Call to get the Memory usage callMemoryUsage.
- * Uses windows api.
  * Creates a Memory Status struct to call memory.
  * Check status of global memory.
  * Print Total Memory in use, Total physical/virtual memory 
@@ -13,28 +13,74 @@
 */ //////////////////////////////////////////////////////////
 #define MEM_GB 1024 * 1024 * 1024
 
-int callMemoryUsage() {
+double getTotalMemory() {
+
+    double totalRam;
+    struct sysinfo info;
+
+    if(sysinfo(&info) < 0) perror("sysinfo");
+
+    totalRam = (double) info.totalram / (MEM_GB);
+
+    return totalRam;
+}
+
+double getAvailableMemory() {
+
+    double freeRam;
+    struct sysinfo info;
+
+    if(sysinfo(&info) < 0) perror("sysinfo");
+
+    freeRam  = (double) info.freeram / (MEM_GB);
+
+    return freeRam;
+}
+
+double getCurrentMemoryUsage() {
 
     double totalRam, freeRam, ramUsage;
     struct sysinfo info;
 
     if(sysinfo(&info) < 0) perror("sysinfo");
 
-    totalRam = (double) info.totalram / (MEM_GB);
-    freeRam  = (double) info.freeram / (MEM_GB);
+    totalRam = getTotalMemory();
+    freeRam = getAvailableMemory();
     ramUsage = totalRam - freeRam;
 
-    printf("RAM available = %0.2f GB\
-            Free RAM = %0.2f GB\
-            Total RAM = %0.2f GB\n", ramUsage, freeRam, totalRam);
-
-    return 0;
+    return ramUsage;
 }
 
-int getDiskSpace(const char* path) {
+double getTotalDiskSpace() {
 
     double spaceAvailable, totalSpace, spaceUsed;
     struct statvfs stat;
+    const char *path = "/root";
+
+    if(statvfs(path, &stat) < 0) perror("sysStatvfs");
+
+    totalSpace = (double)(stat.f_frsize * stat.f_blocks) / (MEM_GB);
+
+    return totalSpace;
+}
+
+double getAvailableDiskSpace() {
+
+    double spaceAvailable, totalSpace, spaceUsed;
+    struct statvfs stat;
+    const char *path = "/root";
+    if(statvfs(path, &stat) < 0) perror("sysStatvfs");
+
+    spaceAvailable = (double) (stat.f_bsize * stat.f_bavail) / (MEM_GB);
+
+    return spaceAvailable;
+}
+
+double getCurrentDiskSpace() {
+
+    double spaceAvailable, totalSpace, spaceUsed;
+    struct statvfs stat;
+    const char *path = "/root";
 
     if(statvfs(path, &stat) < 0) perror("sysStatvfs");
 
@@ -42,9 +88,5 @@ int getDiskSpace(const char* path) {
     spaceAvailable = (double) (stat.f_bsize * stat.f_bavail) / (MEM_GB);
     spaceUsed = totalSpace - spaceAvailable;
 
-    printf("Total space = %0.2f GB\
-            Available space = %0.2f GB\
-            Currently used space = %0.2f GB\n", totalSpace, spaceAvailable, spaceUsed);
-
-    return 0;
+    return spaceUsed;
 }
