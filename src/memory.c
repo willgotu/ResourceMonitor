@@ -1,8 +1,4 @@
 #include "../include/memory.h"
-#include <stdio.h>
-#include <stdbool.h>
-#include <sys/sysinfo.h>
-#include <sys/statvfs.h>
 
 /* /////////////////////////////////////////////////////////
  * Call to get the Memory usage callMemoryUsage.
@@ -11,7 +7,6 @@
  * Print Total Memory in use, Total physical/virtual memory 
  * and Free physcal/virtual memory.
 */ //////////////////////////////////////////////////////////
-#define MEM_GB 1024 * 1024 * 1024
 
 double getTotalMemory() {
 

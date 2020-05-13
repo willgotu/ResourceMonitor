@@ -1,14 +1,4 @@
-#define _POSIX_C_SOURCE 199309L
-#define _GNU_SOURCE
-
-#include <stdio.h>
-#include <stdbool.h>
-#include <sys/sysinfo.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <stdint.h>
+#include "../include/cpu.h"
 
 /* /////////////////////////////////////////////////////////
  * Function to get cpu info: getCpuInfo.
@@ -38,16 +28,14 @@ int getCpuInfo()
     return 0;
 }
 
-static inline
-uint64_t getCycles(void)
+static inline uint64_t getCycles()
 {                              /* 1 tick = 64 clocks */
      unsigned a, d;
      asm volatile("rdtsc" : "=a" (a), "=d" (d));
      return ((uint64_t)a) | (((uint64_t)d) << 32);
 }
 
-static inline
-uint32_t getMillisecondCounter(void)
+static inline uint32_t getMillisecondCounter()
 {
     uint32_t millisecondCounter;
     struct timespec t;
@@ -58,8 +46,7 @@ uint32_t getMillisecondCounter(void)
     return millisecondCounter;
 }
 
-static inline
-int getClockSpeed(void)
+int getClockSpeed()
 {
     const uint64_t cycles = getCycles();
     const uint32_t millis = getMillisecondCounter();
@@ -83,4 +70,5 @@ int getClockSpeed(void)
             lastResult = newResult;
         }
     }
+    return lastResult;
 }

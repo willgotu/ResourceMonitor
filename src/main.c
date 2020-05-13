@@ -1,8 +1,9 @@
-#include "cpu.c"
+#include "../include/cpu.h"
 #include "../include/memory.h"
 #include <ncurses.h>
 
 int main(int argc, const char* argv[]) {
+
     int cpu = 0;
     int cpuSpeed = 0;
     double cpuSpeedGHz = 0;
@@ -10,9 +11,6 @@ int main(int argc, const char* argv[]) {
     double currentRamUsagePercent, currentDiskUsagePercent;
 
     cpu = getCpuInfo();
-    // memory = callMemoryUsage(); // RAM Usage
-    // disk = getLogicalDiskInfo();
-    // diskSpace = getDiskSpace(argv[1]);
 
     initscr();
     curs_set(0);
@@ -41,7 +39,7 @@ int main(int argc, const char* argv[]) {
         currentDiskSpace = getCurrentDiskSpace();
         currentRamUsagePercent = (currentRamUsage / totalRam) * 100.0;
         currentDiskUsagePercent = (currentDiskSpace / totalDiskSpace) * 100.0;
-
+        
         attron(COLOR_PAIR(1));
         mvprintw(1, 0, "CPU Speed: ", NULL);
         cpuSpeedGHz > 3.50 ? attron(COLOR_PAIR(3)) : attron(COLOR_PAIR(2));
@@ -70,6 +68,7 @@ int main(int argc, const char* argv[]) {
         mvprintw(7, 0, "Total Disk Space: ", NULL);
         attron(COLOR_PAIR(2));
         mvprintw(7, 19, "%0.2f GB", totalDiskSpace);
+
         refresh();
         sleep(1);
     }

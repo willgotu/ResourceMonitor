@@ -1,6 +1,18 @@
-#ifndef CPU_H_
-#define CPU_H_
+#ifndef CPU_H
+#define CPU_H
 
+#include <stdio.h>
+#include <stdbool.h>
+#include <sys/sysinfo.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <stdint.h>
 
+int getCpuInfo();
+static inline uint64_t getCycles();
+static inline uint32_t getMillisecondCounter();
+int getClockSpeed();
 
-#endif // CPU_H_
+#endif /* CPU_H */
