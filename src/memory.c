@@ -1,12 +1,16 @@
 #include "../include/memory.h"
 
-/* /////////////////////////////////////////////////////////
- * Call to get the Memory usage callMemoryUsage.
- * Creates a Memory Status struct to call memory.
- * Check status of global memory.
- * Print Total Memory in use, Total physical/virtual memory 
- * and Free physcal/virtual memory.
-*/ //////////////////////////////////////////////////////////
+/* ////////////////////////////////////////////////////////////////////////////////
+ * This file contains helper functions that get the information on a Linux
+ * system's RAM and disk space.
+*/ ////////////////////////////////////////////////////////////////////////////////
+
+
+//---------------------------------------------------------------------------------
+// getTotalMemory(): get the total RAM allocated on the system
+//
+// output:           return totalRam
+//---------------------------------------------------------------------------------
 
 double getTotalMemory() {
 
@@ -20,6 +24,13 @@ double getTotalMemory() {
     return totalRam;
 }
 
+
+//---------------------------------------------------------------------------------
+// getAvailableMemory(): get the available RAM allocated on the system
+//
+// output:               return freeRam
+//---------------------------------------------------------------------------------
+
 double getAvailableMemory() {
 
     double freeRam;
@@ -32,6 +43,12 @@ double getAvailableMemory() {
     return freeRam;
 }
 
+
+//---------------------------------------------------------------------------------
+// getCurrentMemoryUsage(): get the current RAM allocated on the system
+//
+// output:                  return ramUsage
+//---------------------------------------------------------------------------------
 double getCurrentMemoryUsage() {
 
     double totalRam, freeRam, ramUsage;
@@ -46,6 +63,13 @@ double getCurrentMemoryUsage() {
     return ramUsage;
 }
 
+
+//---------------------------------------------------------------------------------
+// getTotalDiskSpace(): get total disk spaceallocated on the system
+//
+// output:              return totalSpace
+//---------------------------------------------------------------------------------
+
 double getTotalDiskSpace() {
 
     double spaceAvailable, totalSpace, spaceUsed;
@@ -59,17 +83,32 @@ double getTotalDiskSpace() {
     return totalSpace;
 }
 
+
+//---------------------------------------------------------------------------------
+// getAvailableDiskSpace(): get free disk space available on the system
+//
+// output:                  return spaceAvailable
+//---------------------------------------------------------------------------------
+
 double getAvailableDiskSpace() {
 
     double spaceAvailable, totalSpace, spaceUsed;
     struct statvfs stat;
     const char *path = "/root";
+
     if(statvfs(path, &stat) < 0) perror("sysStatvfs");
 
     spaceAvailable = (double) (stat.f_bsize * stat.f_bavail) / (MEM_GB);
 
     return spaceAvailable;
 }
+
+
+//---------------------------------------------------------------------------------
+// getCurrentDiskSpace(): get current disk space allocated on the system
+//
+// output:                return spaceUsed
+//---------------------------------------------------------------------------------
 
 double getCurrentDiskSpace() {
 
@@ -85,3 +124,6 @@ double getCurrentDiskSpace() {
 
     return spaceUsed;
 }
+
+
+//---------------------------------------------------------------------------------

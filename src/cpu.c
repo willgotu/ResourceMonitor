@@ -1,42 +1,37 @@
 #include "../include/cpu.h"
 
-/* /////////////////////////////////////////////////////////
- * Function to get cpu info: getCpuInfo.
- * Open registry key to CPU.
- * Query CPU frequency (speed).
-*/ /////////////////////////////////////////////////////////
+/* ////////////////////////////////////////////////////////////////////////////////
+ * This file contains helper functions that help get the frequency of a CPU on a
+ * Linux system.
+*/ ////////////////////////////////////////////////////////////////////////////////
 
-int getCpuInfo()
-{
-    // printf("This system has %d processors configured and "
-    //         "%d processors available.\n",
-    //         get_nprocs_conf(), get_nprocs());
-    // return 0;
-    FILE *cpuinfo = fopen("/proc/cpuinfo", "rb");
-    char line[1024];
-    int count = 0;
-    while (fgets(line, 1024, cpuinfo) != NULL)
-    {
-        if(strstr(line, "processor") != NULL) {
-            printf("\n");
-            puts(line);
-            count++;
-        }
-        if(strstr(line, "cpu MHz") != NULL) puts(line);
-    }
-    fclose(cpuinfo);
-    return 0;
+
+//---------------------------------------------------------------------------------
+// getCycles(): use the rdtsc (read time stamp counter) instruction to count the
+//              number of cycles since a reset
+//
+// output:      return cycle count (return value stored in 64-bit MSR)
+//---------------------------------------------------------------------------------
+
+static inline uint64_t getCycles() {     
+
+    /* 1 tick = 64 clocks */
+    unsigned a, d;
+
+    asm volatile("rdtsc" : "=a" (a), "=d" (d));
+
+    return ((uint64_t)a) | (((uint64_t)d) << 32);
 }
 
-static inline uint64_t getCycles()
-{                              /* 1 tick = 64 clocks */
-     unsigned a, d;
-     asm volatile("rdtsc" : "=a" (a), "=d" (d));
-     return ((uint64_t)a) | (((uint64_t)d) << 32);
-}
 
-static inline uint32_t getMillisecondCounter()
-{
+//---------------------------------------------------------------------------------
+// getMillisecondCounter(): get the time in milliseconds
+//
+// output:                  return millisecondCounter
+//---------------------------------------------------------------------------------
+
+static inline uint32_t getMillisecondCounter() {
+
     uint32_t millisecondCounter;
     struct timespec t;
 
@@ -46,25 +41,33 @@ static inline uint32_t getMillisecondCounter()
     return millisecondCounter;
 }
 
-int getClockSpeed()
-{
+
+//---------------------------------------------------------------------------------
+// getClockSpeed(): get the clock speed of a CPU by taking the the cycles and time
+//                  taken by system
+//
+// output:          return lastResult
+//---------------------------------------------------------------------------------
+
+int getClockSpeed() {
+
     const uint64_t cycles = getCycles();
     const uint32_t millis = getMillisecondCounter();
     int lastResult = 0;
 
-    for (;;)
-    {
+    for (;;) {
+
         int n = 1000000;
         while (--n > 0) {}
 
-        const uint32_t millisElapsed = getMillisecondCounter() - millis;
+        const uint32_t milliSecondsElapsed = getMillisecondCounter() - millis;
         const uint64_t cyclesNow = getCycles();
 
-        if (millisElapsed > 80)
-        {
-            const int newResult = (int) (((cyclesNow - cycles) / millisElapsed) / 1000);
+        if (milliSecondsElapsed  > 80) {
 
-            if (millisElapsed > 500 || (lastResult == newResult && newResult > 100))
+            const int newResult = (int) (((cyclesNow - cycles) / milliSecondsElapsed ) / 1000);
+
+            if (milliSecondsElapsed  > 500 || (lastResult == newResult && newResult > 100))
                 return newResult;
 
             lastResult = newResult;
@@ -72,3 +75,6 @@ int getClockSpeed()
     }
     return lastResult;
 }
+
+
+//---------------------------------------------------------------------------------

@@ -10,7 +10,7 @@
 #include <time.h>
 #include <stdint.h>
 
-int getCpuInfo();
+/* Helper functions to get the CPU frequency */
 static inline uint64_t getCycles();
 static inline uint32_t getMillisecondCounter();
 int getClockSpeed();
