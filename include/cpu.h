@@ -11,6 +11,7 @@
 #include <stdint.h>
 
 /* Helper functions to get the CPU frequency */
+int getNumberOfProcessors();
 static inline uint64_t getCycles();
 static inline uint32_t getMillisecondCounter();
 int getClockSpeed();

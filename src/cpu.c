@@ -6,6 +6,20 @@
 */ ////////////////////////////////////////////////////////////////////////////////
 
 
+struct timespec t;
+
+//---------------------------------------------------------------------------------
+// getNumberOfProcessors(): call get_nprocs to get the numbers of processors 
+//                          available on the system
+//
+// output:      return number of processors
+//---------------------------------------------------------------------------------
+
+int getNumberOfProcessors() {
+
+    return get_nprocs();
+}
+
 //---------------------------------------------------------------------------------
 // getCycles(): use the rdtsc (read time stamp counter) instruction to count the
 //              number of cycles since a reset
@@ -33,8 +47,7 @@ static inline uint64_t getCycles() {
 static inline uint32_t getMillisecondCounter() {
 
     uint32_t millisecondCounter;
-    struct timespec t;
-
+    
     clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &t);
     millisecondCounter = (uint32_t) (t.tv_sec * 1000 + t.tv_nsec / 1000000);
 

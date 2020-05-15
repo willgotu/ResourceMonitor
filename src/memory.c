@@ -5,6 +5,8 @@
  * system's RAM and disk space.
 */ ////////////////////////////////////////////////////////////////////////////////
 
+struct sysinfo info;
+struct statvfs stat;
 
 //---------------------------------------------------------------------------------
 // getTotalMemory(): get the total RAM allocated on the system
@@ -15,8 +17,7 @@
 double getTotalMemory() {
 
     double totalRam;
-    struct sysinfo info;
-
+    
     if(sysinfo(&info) < 0) perror("sysinfo");
 
     totalRam = (double) info.totalram / (MEM_GB);
@@ -34,7 +35,6 @@ double getTotalMemory() {
 double getAvailableMemory() {
 
     double freeRam;
-    struct sysinfo info;
 
     if(sysinfo(&info) < 0) perror("sysinfo");
 
@@ -52,7 +52,6 @@ double getAvailableMemory() {
 double getCurrentMemoryUsage() {
 
     double totalRam, freeRam, ramUsage;
-    struct sysinfo info;
 
     if(sysinfo(&info) < 0) perror("sysinfo");
 
@@ -73,7 +72,6 @@ double getCurrentMemoryUsage() {
 double getTotalDiskSpace() {
 
     double spaceAvailable, totalSpace, spaceUsed;
-    struct statvfs stat;
     const char *path = "/root";
 
     if(statvfs(path, &stat) < 0) perror("sysStatvfs");
@@ -93,7 +91,6 @@ double getTotalDiskSpace() {
 double getAvailableDiskSpace() {
 
     double spaceAvailable, totalSpace, spaceUsed;
-    struct statvfs stat;
     const char *path = "/root";
 
     if(statvfs(path, &stat) < 0) perror("sysStatvfs");
@@ -113,7 +110,6 @@ double getAvailableDiskSpace() {
 double getCurrentDiskSpace() {
 
     double spaceAvailable, totalSpace, spaceUsed;
-    struct statvfs stat;
     const char *path = "/root";
 
     if(statvfs(path, &stat) < 0) perror("sysStatvfs");
