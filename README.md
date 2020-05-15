@@ -1,6 +1,6 @@
 # CMPE 220 Resource Monitor
 
-This is a project intended for CMPE 220. The CMPE 220 Resource Monitor is a barebones Linux Resource monitor intended to teach students on how the inner working of how a Linux system gathers its resources and displays it on an interface.
+This is a project intended for CMPE 220. The CMPE 220 Resource Monitor is a barebones Linux Resource monitor intended to teach us students on how the inner working of how a Linux system gathers its resources and displays it on an interface. Its solely for learning purposes so there's nothing fancy about it.
 
 ![ResouceMonitor](https://github.com/willgotu/ResourceMonitor/blob/master/misc/resourceMonitor.PNG?raw=true)
 
