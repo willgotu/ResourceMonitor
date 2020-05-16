@@ -6,7 +6,7 @@
 #include <sys/sysinfo.h>
 #include <sys/statvfs.h>
 
-#define MEM_GB 1024 * 1024 * 1024
+#define MEM_GB 1000 * 1000 * 1000
 
 /* Helper functions to get the RAM info */ 
 double getTotalMemory();
